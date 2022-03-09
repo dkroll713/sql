@@ -25,25 +25,26 @@ price = "/price"
 financials = "/financials"
 # tickerList = ['GME','TSLA','TTD','HD','BBBy','CS']
 pk = "?token=pk_aff16f9ea7754a39bd53879c47f24714"
-ticker = input("Which stock would you like to look up? \n>> ").upper()
-query = input("What would you like to search for? \nType 'price','financials' \
-\n>> ")
 
-nasdaq_info = nasdaqdatalink.get_table('SHARADAR/TICKERS',ticker=ticker)
-nasdaq_financials = nasdaqdatalink.get_table('SHARADAR/SF1',ticker=ticker)
-company = nasdaq_info.iloc[1]
-name = company.loc['name']
-sicsector = company.loc['sicsector']
-sicindustry = company.loc['sicindustry']
-famaindustry = company.loc['famaindustry']
-sector = company.loc['sector']
-industry = company.loc['industry']
-scalemarketcap = company.loc['scalemarketcap']
-scalerevenue = company.loc['scalerevenue']
 
 def search_ticker():
+    ticker = input("Which stock would you like to look up? \n>> ").upper()
+    query = input("What would you like to search for? \nType 'price','financials' \
+    \n>> ")
+
+    nasdaq_info = nasdaqdatalink.get_table('SHARADAR/TICKERS',ticker=ticker)
+    nasdaq_financials = nasdaqdatalink.get_table('SHARADAR/SF1',ticker=ticker)
+    company = nasdaq_info.iloc[1]
+    name = company.loc['name']
+    sicsector = company.loc['sicsector']
+    sicindustry = company.loc['sicindustry']
+    famaindustry = company.loc['famaindustry']
+    sector = company.loc['sector']
+    industry = company.loc['industry']
+    scalemarketcap = company.loc['scalemarketcap']
+    scalerevenue = company.loc['scalerevenue']
     if query.lower() == 'price':
-        get_price_db()
+        get_price_db(ticker)
 
 
 def check_for_recent():
@@ -64,7 +65,7 @@ def check_for_recent():
     rows = cur.fetchall()
     print(rows)
 
-def get_price_db():
+def get_price_db(ticker):
     n = 0
     # for ticker in tickerList:
         # ticker = tickerList[n]
@@ -113,6 +114,19 @@ def get_price_db():
     else:
         # insert the date, ticker, & price into 'stocks' table
         try:
+
+            nasdaq_info = nasdaqdatalink.get_table('SHARADAR/TICKERS',ticker=ticker)
+            nasdaq_financials = nasdaqdatalink.get_table('SHARADAR/SF1',ticker=ticker)
+            company = nasdaq_info.iloc[1]
+            name = company.loc['name']
+            sicsector = company.loc['sicsector']
+            sicindustry = company.loc['sicindustry']
+            famaindustry = company.loc['famaindustry']
+            sector = company.loc['sector']
+            industry = company.loc['industry']
+            scalemarketcap = company.loc['scalemarketcap']
+            scalerevenue = company.loc['scalerevenue']
+
             statement = "INSERT INTO stocks (date, time, name, ticker, price ,\
             sicsector, sicindustry, famaindustry, sector, industry, \
             scalemarketcap, scalerevenue) VALUES (%s, %s, %s, %s, %s, %s, %s, \
@@ -132,5 +146,5 @@ def get_price_db():
             conn.close()
 
 
-if query != "":
-    search_ticker()
+# if query != "":
+#     search_ticker()
