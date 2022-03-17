@@ -1,6 +1,7 @@
 import nasdaqdatalink
 import pandas as pd
 import mariadb
+import time
 
 nasdaqdatalink.read_key("C:/bin/api-keys/nasdaq-data-link")
 
@@ -12,17 +13,30 @@ nasdaqdatalink.read_key("C:/bin/api-keys/nasdaq-data-link")
 # name = df.loc['name']
 
 def print_fin(ticker):
-    nasdaq_info = nasdaqdatalink.get_table('SHARADAR/TICKERS',ticker=ticker)
-    company = nasdaq_info.iloc[1]
-    name = company.loc['name']
-    sicsector = company.loc['sicsector']
-    sicindustry = company.loc['sicindustry']
-    famaindustry = company.loc['famaindustry']
-    sector = company.loc['sector']
-    industry = company.loc['industry']
-    scalemarketcap = company.loc['scalemarketcap']
-    scalerevenue = company.loc['scalerevenue']
 
+    null = 'NULL'
+
+    nasdaq_info = nasdaqdatalink.get_table('SHARADAR/TICKERS',ticker=ticker)
+    if not nasdaq_info.empty:
+        company = nasdaq_info.iloc[1]
+        name = company.loc['name']
+        sicsector = company.loc['sicsector']
+        sicindustry = company.loc['sicindustry']
+        famaindustry = company.loc['famaindustry']
+        sector = company.loc['sector']
+        industry = company.loc['industry']
+        scalemarketcap = company.loc['scalemarketcap']
+        scalerevenue = company.loc['scalerevenue']
+    else:
+        company = null
+        name = null
+        sicsector = null
+        sicindustry = null
+        famaindustry = null
+        sector = null
+        industry = null
+        scalemarketcap = null
+        scalerevenue = null
 
     financials = nasdaqdatalink.get_table('SHARADAR/SF1',dimension='MRY',ticker=ticker)
     nasdaq_financials = financials.iloc[1]
@@ -32,109 +46,418 @@ def print_fin(ticker):
     datekey = nasdaq_financials.loc['datekey']
     reportperiod = nasdaq_financials.loc['reportperiod']
     lastupdated = nasdaq_financials.loc['lastupdated']
-    accoci = int(nasdaq_financials.loc['accoci'])
-    assets = int(nasdaq_financials.loc['assets'])
-    assetsavg = int(nasdaq_financials.loc['assetsavg'])
-    assetsc = int(nasdaq_financials.loc['assetsc'])
-    assetsnc = int(nasdaq_financials.loc['assetsnc'])
-    assetturnover = int(nasdaq_financials.loc['assetturnover'])
-    bvps = int(nasdaq_financials.loc['bvps'])
-    capex = int(nasdaq_financials.loc['capex'])
-    cashneq = int(nasdaq_financials.loc['cashneq'])
-    cashnequsd = int(nasdaq_financials.loc['cashnequsd'])
-    cor = int(nasdaq_financials.loc['cor'])
-    consolinc = int(nasdaq_financials.loc['consolinc'])
-    currentratio = int(nasdaq_financials.loc['currentratio'])
-    de = int(nasdaq_financials.loc['de'])
-    debt = int(nasdaq_financials.loc['debt'])
-    debtc = int(nasdaq_financials.loc['debtc'])
-    debtnc = int(nasdaq_financials.loc['debtnc'])
-    debtusd = int(nasdaq_financials.loc['debtusd'])
-    deferredrev = int(nasdaq_financials.loc['deferredrev'])
-    depamor = int(nasdaq_financials.loc['depamor'])
-    deposits = int(nasdaq_financials.loc['deposits'])
-    divyield = int(nasdaq_financials.loc['divyield'])
-    dps = int(nasdaq_financials.loc['dps'])
-    ebit = int(nasdaq_financials.loc['ebit'])
-    ebitda = int(nasdaq_financials.loc['ebitda'])
-    ebitdamargin = int(nasdaq_financials.loc['ebitdamargin'])
-    ebitdausd = int(nasdaq_financials.loc['ebitdausd'])
-    ebitusd = int(nasdaq_financials.loc['ebitusd'])
-    ebt = int(nasdaq_financials.loc['ebt'])
-    eps = int(nasdaq_financials.loc['eps'])
-    epsdil = int(nasdaq_financials.loc['epsdil'])
-    epsusd = int(nasdaq_financials.loc['epsusd'])
-    equity = int(nasdaq_financials.loc['equity'])
-    equityavg = int(nasdaq_financials.loc['equityavg'])
-    equityusd = int(nasdaq_financials.loc['equityusd'])
-    ev = int(nasdaq_financials.loc['ev'])
-    evebit = int(nasdaq_financials.loc['evebit'])
-    fcf = int(nasdaq_financials.loc['fcf'])
-    fcfps = int(nasdaq_financials.loc['fcfps'])
-    fxusd = int(nasdaq_financials.loc['fxusd'])
-    gp = int(nasdaq_financials.loc['gp'])
-    grossmargin = int(nasdaq_financials.loc['grossmargin'])
-    intangibles = int(nasdaq_financials.loc['intangibles'])
-    intexp = int(nasdaq_financials.loc['intexp'])
-    invcap = int(nasdaq_financials.loc['invcap'])
-    inventory = int(nasdaq_financials.loc['inventory'])
-    investments = int(nasdaq_financials.loc['investments'])
-    investmentsc = int(nasdaq_financials.loc['investmentsc'])
-    investmentsnc = int(nasdaq_financials.loc['investmentsnc'])
-    liabilities = int(nasdaq_financials.loc['liabilities'])
-    liabilitiesc = int(nasdaq_financials.loc['liabilitiesc'])
-    liabilitiesnc = int(nasdaq_financials.loc['liabilitiesnc'])
-    marketcap = int(nasdaq_financials.loc['marketcap'])
-    ncf = int(nasdaq_financials.loc['ncf'])
-    ncfbus = int(nasdaq_financials.loc['ncfbus'])
-    ncfcommon = int(nasdaq_financials.loc['ncfcommon'])
-    ncfdebt = int(nasdaq_financials.loc['ncfdebt'])
-    ncfdiv = int(nasdaq_financials.loc['ncfdiv'])
-    ncff = int(nasdaq_financials.loc['ncff'])
-    ncfi = int(nasdaq_financials.loc['ncfi'])
-    ncfinv = int(nasdaq_financials.loc['ncfinv'])
-    ncfo = int(nasdaq_financials.loc['ncfo'])
-    ncfx = int(nasdaq_financials.loc['ncfx'])
-    netinc = int(nasdaq_financials.loc['netinc'])
-    netinccmn = int(nasdaq_financials.loc['netinccmn'])
-    netinccmnusd = int(nasdaq_financials.loc['netinccmnusd'])
-    netincdis = int(nasdaq_financials.loc['netincdis'])
-    netincnci = int(nasdaq_financials.loc['netincnci'])
-    netmargin = int(nasdaq_financials.loc['netmargin'])
-    opex = int(nasdaq_financials.loc['opex'])
-    opinc = int(nasdaq_financials.loc['opinc'])
-    payables = int(nasdaq_financials.loc['payables'])
-    payoutratio = int(nasdaq_financials.loc['payoutratio'])
-    pb = int(nasdaq_financials.loc['pb'])
-    pe = int(nasdaq_financials.loc['pe'])
-    pe1 = int(nasdaq_financials.loc['pe1'])
-    ppnenet = int(nasdaq_financials.loc['ppnenet'])
-    prefdivis = int(nasdaq_financials.loc['prefdivis'])
-    price = int(nasdaq_financials.loc['price'])
-    ps = int(nasdaq_financials.loc['ps'])
-    ps1 = int(nasdaq_financials.loc['ps1'])
-    receivables = int(nasdaq_financials.loc['receivables'])
-    retearn = int(nasdaq_financials.loc['retearn'])
-    revenue = int(nasdaq_financials.loc['revenue'])
-    revenueusd = int(nasdaq_financials.loc['revenueusd'])
-    rnd = int(nasdaq_financials.loc['rnd'])
-    roa = int(nasdaq_financials.loc['roa'])
-    roe = int(nasdaq_financials.loc['roe'])
-    roic = int(nasdaq_financials.loc['roic'])
-    ros = int(nasdaq_financials.loc['ros'])
-    sbcomp = int(nasdaq_financials.loc['sbcomp'])
-    sgna = int(nasdaq_financials.loc['sgna'])
-    sharefactor = int(nasdaq_financials.loc['sharefactor'])
-    sharesbas = int(nasdaq_financials.loc['sharesbas'])
-    shareswa = int(nasdaq_financials.loc['shareswa'])
-    shareswadil = int(nasdaq_financials.loc['shareswadil'])
-    sps = int(nasdaq_financials.loc['sps'])
-    tangibles = int(nasdaq_financials.loc['tangibles'])
-    taxassets = int(nasdaq_financials.loc['taxassets'])
-    taxexp = int(nasdaq_financials.loc['taxexp'])
-    taxliabilities = int(nasdaq_financials.loc['taxliabilities'])
-    tbvps = int(nasdaq_financials.loc['tbvps'])
-    workingcapital = int(nasdaq_financials.loc['workingcapital'])
+    if nasdaq_financials.loc['accoci'] != None:
+        accoci = float(nasdaq_financials.loc['accoci'])
+    else:
+        accoci = null
+    if nasdaq_financials.loc['assets'] != None:
+        assets = float(nasdaq_financials.loc['assets'])
+    else:
+        assets = null
+    if nasdaq_financials.loc['assetsavg'] != None:
+        assetsavg = float(nasdaq_financials.loc['assetsavg'])
+    else:
+        assetsavg = null
+    if nasdaq_financials.loc['assetsc'] != None:
+        assetsc = float(nasdaq_financials.loc['assetsc'])
+    else:
+        assetsc = 'Null'
+    if nasdaq_financials.loc['assetsnc'] != None:
+        assetsnc = float(nasdaq_financials.loc['assetsnc'])
+    else:
+        assetsnc = 'Null'
+    if nasdaq_financials.loc['assetturnover'] != None:
+        assetturnover = float(nasdaq_financials.loc['assetturnover'])
+    else:
+        assetturnover = null
+    if nasdaq_financials.loc['bvps'] != None:
+        bvps = float(nasdaq_financials.loc['bvps'])
+    else:
+        bvps = null
+    if nasdaq_financials.loc['capex'] != None:
+        capex = float(nasdaq_financials.loc['capex'])
+    else:
+        capex = null
+    if nasdaq_financials.loc['cashneq'] != None:
+        cashneq = float(nasdaq_financials.loc['cashneq'])
+    else:
+        cashneq = null
+    if nasdaq_financials.loc['cashnequsd'] != None:
+        cashnequsd = float(nasdaq_financials.loc['cashnequsd'])
+    else:
+        cashnequsd = null
+    if nasdaq_financials.loc['cor'] != None:
+        cor = float(nasdaq_financials.loc['cor'])
+    else:
+        cor = null
+    if nasdaq_financials.loc['consolinc'] != None:
+        consolinc = float(nasdaq_financials.loc['consolinc'])
+    else:
+        consolinc = null
+    if nasdaq_financials.loc['currentratio'] != None:
+        currentratio = float(nasdaq_financials.loc['currentratio'])
+    else:
+        currentratio = null
+    if nasdaq_financials.loc['de'] != None:
+        de = float(nasdaq_financials.loc['de'])
+    else:
+        de = null
+    if nasdaq_financials.loc['debt'] != None:
+        debt = float(nasdaq_financials.loc['debt'])
+    else:
+        debt = null
+    if nasdaq_financials.loc['debtc'] != None:
+        debtc = float(nasdaq_financials.loc['debtc'])
+    else:
+        debtc = null
+    if nasdaq_financials.loc['debtnc'] != None:
+        debtnc = float(nasdaq_financials.loc['debtnc'])
+    else:
+        debtnc = null
+    if nasdaq_financials.loc['debtusd'] != None:
+        debtusd = float(nasdaq_financials.loc['debtusd'])
+    else:
+        debtusd = null
+    if nasdaq_financials.loc['deferredrev'] != None:
+        deferredrev = float(nasdaq_financials.loc['deferredrev'])
+    else:
+        deferredrev = null
+    if nasdaq_financials.loc['depamor'] != None:
+        depamor = float(nasdaq_financials.loc['depamor'])
+    else:
+        depamor = null
+    if nasdaq_financials.loc['deposits'] != None:
+        deposits = float(nasdaq_financials.loc['deposits'])
+    else:
+        deposits = null
+    if nasdaq_financials.loc['divyield'] != None:
+        divyield = float(nasdaq_financials.loc['divyield'])
+    else:
+        divyield = null
+    if nasdaq_financials.loc['dps'] != None:
+        dps = float(nasdaq_financials.loc['dps'])
+    else:
+        dps = null
+    if nasdaq_financials.loc['ebit'] != None:
+        ebit = float(nasdaq_financials.loc['ebit'])
+    else:
+        ebit = null
+    if nasdaq_financials.loc['ebitda'] != None:
+        ebitda = float(nasdaq_financials.loc['ebitda'])
+    else:
+        ebitda = null
+    if nasdaq_financials.loc['ebitdamargin'] != None:
+        ebitdamargin = float(nasdaq_financials.loc['ebitdamargin'])
+    else:
+        ebitdamargin = null
+    if nasdaq_financials.loc['ebitdausd'] != None:
+        ebitdausd = float(nasdaq_financials.loc['ebitdausd'])
+    else:
+        ebitdausd = null
+    if nasdaq_financials.loc['ebitusd'] != None:
+        ebitusd = float(nasdaq_financials.loc['ebitusd'])
+    else:
+        ebitusd = null
+    if nasdaq_financials.loc['ebt'] != None:
+        ebt = float(nasdaq_financials.loc['ebt'])
+    else:
+        ebt = null
+    if nasdaq_financials.loc['eps'] != None:
+        eps = float(nasdaq_financials.loc['eps'])
+    else:
+        eps = null
+    if nasdaq_financials.loc['epsdil'] != None:
+        epsdil = float(nasdaq_financials.loc['epsdil'])
+    else:
+        epsdil = null
+    if nasdaq_financials.loc['epsusd'] != None:
+        epsusd = float(nasdaq_financials.loc['epsusd'])
+    else:
+        epsusd = null
+    if nasdaq_financials.loc['equity'] != None:
+        equity = float(nasdaq_financials.loc['equity'])
+    else:
+        equity = null
+    if nasdaq_financials.loc['equityavg'] != None:
+        equityavg = float(nasdaq_financials.loc['equityavg'])
+    else:
+        equityavg = null
+    if nasdaq_financials.loc['equityusd'] != None:
+        equityusd = float(nasdaq_financials.loc['equityusd'])
+    else:
+        equityusd = null
+    if nasdaq_financials.loc['ev'] != None:
+        ev = float(nasdaq_financials.loc['ev'])
+    else:
+        ev = null
+    if nasdaq_financials.loc['evebit'] != None:
+        evebit = float(nasdaq_financials.loc['evebit'])
+    else:
+        evebit = null
+    if nasdaq_financials.loc['fcf'] != None:
+        fcf = float(nasdaq_financials.loc['fcf'])
+    else:
+        fcf = null
+    if nasdaq_financials.loc['fcfps'] != None:
+        fcfps = float(nasdaq_financials.loc['fcfps'])
+    else:
+        fcfps = null
+    if nasdaq_financials.loc['fxusd'] != None:
+        fxusd = float(nasdaq_financials.loc['fxusd'])
+    else:
+        fxusd = null
+    if nasdaq_financials.loc['gp'] != None:
+        gp = float(nasdaq_financials.loc['gp'])
+    else:
+        gp = null
+    if nasdaq_financials.loc['grossmargin'] != None:
+        grossmargin = float(nasdaq_financials.loc['grossmargin'])
+    else:
+        grossmargin = null
+    if nasdaq_financials.loc['intangibles'] != None:
+        intangibles = float(nasdaq_financials.loc['intangibles'])
+    else:
+        intangibles = null
+    if nasdaq_financials.loc['intexp'] != None:
+        intexp = float(nasdaq_financials.loc['intexp'])
+    else:
+        intexp = null
+    if nasdaq_financials.loc['invcap'] != None:
+        invcap = float(nasdaq_financials.loc['invcap'])
+    else:
+        invcap = null
+    if nasdaq_financials.loc['inventory'] != None:
+        inventory = float(nasdaq_financials.loc['inventory'])
+    else:
+        inventory = null
+    if nasdaq_financials.loc['investments'] != None:
+        investments = float(nasdaq_financials.loc['investments'])
+    else:
+        investments = null
+    if nasdaq_financials.loc['investmentsc'] != None:
+        investmentsc = float(nasdaq_financials.loc['investmentsc'])
+    else:
+        investmentsc = null
+    if nasdaq_financials.loc['investmentsnc'] != None:
+        investmentsnc = float(nasdaq_financials.loc['investmentsnc'])
+    else:
+        investmentsnc = null
+    if nasdaq_financials.loc['liabilities'] != None:
+        liabilities = float(nasdaq_financials.loc['liabilities'])
+    else:
+        liabilities = null
+    if nasdaq_financials.loc['liabilitiesc'] != None:
+        liabilitiesc = float(nasdaq_financials.loc['liabilitiesc'])
+    else:
+        liabilitiesc = null
+    if nasdaq_financials.loc['liabilitiesnc'] != None:
+        liabilitiesnc = float(nasdaq_financials.loc['liabilitiesnc'])
+    else:
+        liabilitiesnc = null
+    if nasdaq_financials.loc['marketcap'] != None:
+        marketcap = float(nasdaq_financials.loc['marketcap'])
+    else:
+        marketcap = null
+    if nasdaq_financials.loc['ncf'] != None:
+        ncf = float(nasdaq_financials.loc['ncf'])
+    else:
+        ncf = null
+    if nasdaq_financials.loc['ncfbus'] != None:
+        ncfbus = float(nasdaq_financials.loc['ncfbus'])
+    else:
+        ncfbus = null
+    if nasdaq_financials.loc['ncfcommon'] != None:
+        ncfcommon = float(nasdaq_financials.loc['ncfcommon'])
+    else:
+        ncfcommon = null
+    if nasdaq_financials.loc['ncfdebt'] != None:
+        ncfdebt = float(nasdaq_financials.loc['ncfdebt'])
+    else:
+        ncfdebt = null
+    if nasdaq_financials.loc['ncfdiv'] != None:
+        ncfdiv = float(nasdaq_financials.loc['ncfdiv'])
+    else:
+        ncfdiv = null
+    if nasdaq_financials.loc['ncff'] != None:
+        ncff = float(nasdaq_financials.loc['ncff'])
+    else:
+        ncff = null
+    if nasdaq_financials.loc['ncfi'] != None:
+        ncfi = float(nasdaq_financials.loc['ncfi'])
+    else:
+        ncfi = null
+    if nasdaq_financials.loc['ncfinv'] != None:
+        ncfinv = float(nasdaq_financials.loc['ncfinv'])
+    else:
+        ncfinv = null
+    if nasdaq_financials.loc['ncfo'] != None:
+        ncfo = float(nasdaq_financials.loc['ncfo'])
+    else:
+        ncfo = null
+    if nasdaq_financials.loc['ncfx'] != None:
+        ncfx = float(nasdaq_financials.loc['ncfx'])
+    else:
+        ncfx = null
+    if nasdaq_financials.loc['netinc'] != None:
+        netinc = float(nasdaq_financials.loc['netinc'])
+    else:
+        netinc = null
+    if nasdaq_financials.loc['netinccmn'] != None:
+        netinccmn = float(nasdaq_financials.loc['netinccmn'])
+    else:
+        netinccmn = null
+    if nasdaq_financials.loc['netinccmnusd'] != None:
+        netinccmnusd = float(nasdaq_financials.loc['netinccmnusd'])
+    else:
+        netinccmnusd = null
+    if nasdaq_financials.loc['netincdis'] != None:
+        netincdis = float(nasdaq_financials.loc['netincdis'])
+    else:
+        netincdis = null
+    if nasdaq_financials.loc['netincnci'] != None:
+        netincnci = float(nasdaq_financials.loc['netincnci'])
+    else:
+        netincnci = null
+    if nasdaq_financials.loc['netmargin'] != None:
+        netmargin = float(nasdaq_financials.loc['netmargin'])
+    else:
+        netmargin = null
+    if nasdaq_financials.loc['opex'] != None:
+        opex = float(nasdaq_financials.loc['opex'])
+    else:
+        opex = null
+    if nasdaq_financials.loc['opinc'] != None:
+        opinc = float(nasdaq_financials.loc['opinc'])
+    else:
+        opinc = null
+    if nasdaq_financials.loc['payables'] != None:
+        payables = float(nasdaq_financials.loc['payables'])
+    else:
+        payables = null
+    if nasdaq_financials.loc['payoutratio'] != None:
+        payoutratio = float(nasdaq_financials.loc['payoutratio'])
+    else:
+        payoutratio = null
+    if nasdaq_financials.loc['pb'] != None:
+        pb = float(nasdaq_financials.loc['pb'])
+    else:
+        pb = null
+    if nasdaq_financials.loc['pe'] != None:
+        pe = float(nasdaq_financials.loc['pe'])
+    else:
+        pe = null
+    if nasdaq_financials.loc['pe1'] != None:
+        pe1 = float(nasdaq_financials.loc['pe1'])
+    else:
+        pe1 = null
+    if nasdaq_financials.loc['ppnenet'] != None:
+        ppnenet = float(nasdaq_financials.loc['ppnenet'])
+    else:
+        ppnenet = null
+    if nasdaq_financials.loc['prefdivis'] != None:
+        prefdivis = float(nasdaq_financials.loc['prefdivis'])
+    else:
+        prefdivis = null
+    if nasdaq_financials.loc['price'] != None:
+        price = float(nasdaq_financials.loc['price'])
+    else:
+        price = null
+    if nasdaq_financials.loc['ps'] != None:
+        ps = float(nasdaq_financials.loc['ps'])
+    else:
+        ps = null
+    if nasdaq_financials.loc['ps1'] != None:
+        ps1 = float(nasdaq_financials.loc['ps1'])
+    else:
+        ps1 = null
+    if nasdaq_financials.loc['receivables'] != None:
+        receivables = float(nasdaq_financials.loc['receivables'])
+    else:
+        receivables = null
+    if nasdaq_financials.loc['retearn'] != None:
+        retearn = float(nasdaq_financials.loc['retearn'])
+    else:
+        retearn = null
+    if nasdaq_financials.loc['revenue'] != None:
+        revenue = float(nasdaq_financials.loc['revenue'])
+    else:
+        revenue = null
+    if nasdaq_financials.loc['revenueusd'] != None:
+        revenueusd = float(nasdaq_financials.loc['revenueusd'])
+    else:
+        revenueusd = null
+    if nasdaq_financials.loc['rnd'] != None:
+        rnd = float(nasdaq_financials.loc['rnd'])
+    else:
+        rnd = null
+    if nasdaq_financials.loc['roa'] != None:
+        roa = float(nasdaq_financials.loc['roa'])
+    else:
+        roa = null
+    if nasdaq_financials.loc['roe'] != None:
+        roe = float(nasdaq_financials.loc['roe'])
+    else:
+        roe = null
+    if nasdaq_financials.loc['roic'] != None:
+        roic = float(nasdaq_financials.loc['roic'])
+    else:
+        roic = null
+    if nasdaq_financials.loc['ros'] != None:
+        ros = float(nasdaq_financials.loc['ros'])
+    else:
+        ros = null
+    if nasdaq_financials.loc['sbcomp'] != None:
+        sbcomp = float(nasdaq_financials.loc['sbcomp'])
+    else:
+        sbcomp = null
+    if nasdaq_financials.loc['sgna'] != None:
+        sgna = float(nasdaq_financials.loc['sgna'])
+    else:
+        sgna = null
+    if nasdaq_financials.loc['sharefactor'] != None:
+        sharefactor = float(nasdaq_financials.loc['sharefactor'])
+    else:
+        sharefactor = null
+    if nasdaq_financials.loc['sharesbas'] != None:
+        sharesbas = float(nasdaq_financials.loc['sharesbas'])
+    else:
+        sharesbas = null
+    if nasdaq_financials.loc['shareswa'] != None:
+        shareswa = float(nasdaq_financials.loc['shareswa'])
+    else:
+        shareswa = null
+    if nasdaq_financials.loc['shareswadil'] != None:
+        shareswadil = float(nasdaq_financials.loc['shareswadil'])
+    else:
+        shareswadil = null
+    if nasdaq_financials.loc['sps'] != None:
+        sps = float(nasdaq_financials.loc['sps'])
+    else:
+        sps = null
+    if nasdaq_financials.loc['tangibles'] != None:
+        tangibles = float(nasdaq_financials.loc['tangibles'])
+    else:
+        tangibles = null
+    if nasdaq_financials.loc['taxassets'] != None:
+        taxassets = float(nasdaq_financials.loc['taxassets'])
+    else:
+        taxassets = null
+    if nasdaq_financials.loc['taxexp'] != None:
+        taxexp = float(nasdaq_financials.loc['taxexp'])
+    else:
+        taxexp = null
+    if nasdaq_financials.loc['taxliabilities'] != None:
+        taxliabilities = float(nasdaq_financials.loc['taxliabilities'])
+    else:
+        taxliabilities = null
+    if nasdaq_financials.loc['tbvps'] != None:
+        tbvps = float(nasdaq_financials.loc['tbvps'])
+    else:
+        tbvps = null
+    if nasdaq_financials.loc['workingcapital'] != None:
+        workingcapital = float(nasdaq_financials.loc['workingcapital'])
+    else:
+        workingcapital = null
 
     #     # cashneq, cashnequsd, cor, consolinc, currentratio, de, debt, debtc, \
     #     # debtnc, debtusd, deferredrev, depamor, deposits, divyield, dps, ebit, \
@@ -169,35 +492,107 @@ def print_fin(ticker):
     cur.execute(statement)
     row = cur.fetchone()
     if row:
-      print("Already included in database.")
+      print(ticker+" already included in database.")
     else:
         try:
-            statement = "INSERT INTO financials (ticker, date, accoci, assets, \
-            assetsavg, assetsc, assetsnc, assetturnover, bvps, capex) VALUES \
-            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            data = (ticker, date, accoci, assets, assetsavg, assetsc, assetsnc, \
-            assetturnover, bvps, capex)
+            statement = "INSERT INTO financials (ticker, date) VALUES (%s, %s)"
+            data = (ticker, date)
             cur.execute(statement,data)
             conn.commit()
-            print("Successfully added first ten values of financials to database")
+            print("\n\nSuccessfully initiated "+ticker+" financials entry.")
+            time.sleep(.1)
         except mariadb.Error as e:
             print(f"Error adding financials to database: {e}")
+    # accoci
+        if accoci:
+            try:
+                statement = "UPDATE financials SET accoci='"+str(accoci)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added accoci: "+str(accoci)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding accoci: "+str(accoci)+" to database: {e}")
+    # assets
+        if assets:
+            try:
+                statement = "UPDATE financials SET assets='"+str(assets)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added assets: "+str(assets)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding assets: "+str(assets)+" to database: {e}")
+    # assetsavg
+        if assetsavg:
+            try:
+                statement = "UPDATE financials SET assetsavg='"+str(assetsavg)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added assetsavg: "+str(assetsavg)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding assetsavg: "+str(assetsavg)+" to database: {e}")
+    # assetsc
+        if assetsc:
+            try:
+                statement = "UPDATE financials SET assetsc='"+str(assetsc)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added assetsc: "+str(assetsc)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding assetsc: "+str(assetsc)+" to database: {e}")
+    # assetsnc
+        if assetsnc:
+            try:
+                statement = "UPDATE financials SET assetsnc='"+str(assetsnc)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added assetsnc: "+str(assetsnc)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding assetsnc: "+str(assetsnc)+" to database: {e}")
+    # assetturnover
+        if assetturnover:
+            try:
+                statement = "UPDATE financials SET assetturnover='"+str(assetturnover)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added assetturnover: "+str(assetturnover)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding assetturnover: "+str(assetturnover)+" to database: {e}")
+    # bvps
+        if bvps:
+            try:
+                statement = "UPDATE financials SET bvps='"+str(bvps)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added bvps: "+str(bvps)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding bvps: "+str(bvps)+" to database: {e}")
+    # capex
+        if capex:
+            try:
+                statement = "UPDATE financials SET capex='"+str(capex)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added capex: "+str(capex)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding capex: "+str(capex)+" to database: {e}")
     # cashneq
-        try:
-            statement = "UPDATE financials SET cashneq='"+str(cashneq)+"' where ticker='"+ticker+"'"
-            cur.execute(statement)
-            conn.commit()
-            print("Successfully added cashneq: "+str(cashneq)+" to database.")
-        except mariadb.Error as e:
-            print(f"Error adding cashneq: "+str(cashneq)+" to database: {e}")
+        if cashneq:
+            try:
+                statement = "UPDATE financials SET cashneq='"+str(cashneq)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added cashneq: "+str(cashneq)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding cashneq: "+str(cashneq)+" to database: {e}")
     # cashnequsd
-        try:
-            statement = "UPDATE financials SET cashnequsd='"+str(cashnequsd)+"' where ticker='"+ticker+"'"
-            cur.execute(statement)
-            conn.commit()
-            print("Successfully added cashnequsd: "+str(cashnequsd)+" to database.")
-        except mariadb.Error as e:
-            print(f"Error adding "+str(cashnequsd)+" to database: {e}")
+        if cashnequsd:
+            try:
+                statement = "UPDATE financials SET cashnequsd='"+str(cashnequsd)+"' where ticker='"+ticker+"'"
+                cur.execute(statement)
+                conn.commit()
+                print("Successfully added cashnequsd: "+str(cashnequsd)+" to database.")
+            except mariadb.Error as e:
+                print(f"Error adding "+str(cashnequsd)+" to database: {e}")
     # cor
         try:
             statement = "UPDATE financials SET cor='"+str(cor)+"' where ticker='"+ticker+"'"
@@ -934,4 +1329,6 @@ def print_fin(ticker):
             print("Successfully added workingcapital: "+str(workingcapital)+" to database.")
         except mariadb.Error as e:
             print(f"Error adding workingcapital: "+str(workingcapital)+" to database: {e}")
-        print("\n\n\nSuccessfully added financials to the database.")
+        print("\n\n\nSuccessfully completed "+ticker+" financials entry.")
+        time.sleep(.3)
+    conn.close()
